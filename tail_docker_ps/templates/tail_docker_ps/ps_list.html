@@ -5,19 +5,13 @@
     <body>
         <div>
             <h1><a href="/">Django Girls Blog</a></h1>
-            {{ docker_ps_list }}
         </div>
-
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My first post</a></h2>
-            <p>Aenean eu leo quam. こんにちは！ よろしくお願いします！ </p>
-        </div>
-
-        <div>
-            <p>公開日: 2014/06/14, 12:14</p>
-            <h2><a href="">2番目の投稿</a></h2>
-            <p> こんにちは！ よろしくお願いします！ </p>
-        </div>
+        
+        {% for docker_ps in docker_ps_list %}
+            <div>
+                <p><a href="">{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
+                
+            </div>
+        {% endfor %}
     </body>
 </html>
