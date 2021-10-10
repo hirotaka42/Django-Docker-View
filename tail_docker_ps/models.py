@@ -5,7 +5,7 @@ import docker
 
 # Create your models here.
 
-class Docker(models.Model):
+class Docker():
     # dockerインスタンス作成
     client = docker.from_env()
 
@@ -34,11 +34,14 @@ class Docker(models.Model):
 
         """
         docker_ps = []
-        for docker_container_list in self.client.containers.list():
+        #client = docker.from_env()
+        #Client = self.client
+        docker_containers = self.client.containers.list()
+        for container in docker_containers:
             tmp = {}
-            CONTAINER = str(docker_container_list)
+            CONTAINER = str(container)
             CONTAINER_ID = CONTAINER[12:22]
-            NAME = str(docker_container_list.name)
+            NAME = str(container.name)
             tmp['CONTAINER_ID'] = CONTAINER_ID
             tmp['NAME'] = NAME
             docker_ps.append(tmp)
