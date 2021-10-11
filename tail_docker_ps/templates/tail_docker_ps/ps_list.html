@@ -1,7 +1,7 @@
 {% extends 'tail_docker_ps/base.html' %}
 
 {% block content %}
-    <p> CONTAINER_ID <span style="margin-right: 24px;"></span> NAMES </p>
+    <p class="docker-ps-list"> CONTAINER_ID <span style="margin-right: 24px;"></span> NAMES </p>
 
     <!-- Docker で起動中のコンテナを表示する -->>
     {% for docker_ps in docker_ps_list %}

@@ -26,3 +26,6 @@ div.view-Results {
                 -25px -25px 50px #ffffff;
 }
 
+p.docker-ps-list.h2 {
+    padding-top: 16px; /* 要素内側のtopの距離 をオーバーライド*/
+}
