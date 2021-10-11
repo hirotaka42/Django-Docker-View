@@ -1,0 +1,21 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>Django View Results of Docker</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/docker_ps.css' %}">
+    </head>
+
+    <body class="docker-ps">
+        <div>
+            <h1><a href="/">Docker ps</a></h1>
+        </div>
+
+        <div class="view-Results">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
