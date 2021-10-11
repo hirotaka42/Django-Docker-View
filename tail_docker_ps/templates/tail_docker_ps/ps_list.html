@@ -1,17 +1,26 @@
+{% load static %}
+
 <html>
     <head>
-        <title>Django Girls blog</title>
+        <title>Django View Results of Docker</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/docker_ps.css' %}">
     </head>
-    <body>
+
+    <body class="docker-ps">
         <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
+            <h1><a href="/">Docker ps</a></h1>
         </div>
-        
-        {% for docker_ps in docker_ps_list %}
-            <div>
+
+        <div class="view-Results">
+            <p> CONTAINER_ID <span style="margin-right: 24px;"></span> NAMES </p>
+            
+            <!-- Docker で起動中のコンテナを表示する -->>
+            {% for docker_ps in docker_ps_list %}
                 <p><a href="">{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
-                
-            </div>
-        {% endfor %}
+            {% endfor %}
+            
+        </div>
     </body>
 </html>

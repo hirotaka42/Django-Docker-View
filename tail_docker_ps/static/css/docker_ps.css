@@ -1,0 +1,28 @@
+
+
+/* 見出しに対する背景色と表示領域の設定 */
+h1 a, h2 a {
+    color: #0074c2;
+    padding: 64px;
+}
+
+
+/* body  body要素すべてに対する背景色と表示領域の設定 */
+body {
+    background-color: #EBECF0;
+    padding: 32px;
+    padding-top: 12px;
+}
+
+/* div.view-ps  起動済みの docker コンテナID と NAME の表示View */
+div.view-Results {
+    margin: 20px; /* 絶対的な寸法 要素外側の距離 */
+    padding: 64px;     /* 要素内側の距離 */
+    padding-top: 46px; /* 要素内側のtopの距離 をオーバーライド*/
+    color: #828282;
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow:  25px 25px 50px #bebebe,
+                -25px -25px 50px #ffffff;
+}
+
