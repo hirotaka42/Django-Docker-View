@@ -2,7 +2,21 @@
 
 {% block content %}
     <div class="post">
-        <h2>{{ container_id }}</h2>
-        <p>docker logs -f {{ container_id }}</p>
+        <h2>{{ request.resolver_match.kwargs.container_id }}</h2>
+        <p>docker logs -f {{ request.resolver_match.kwargs.container_id }}</p>
     </div>
+    <textarea id="console" rows="30" cols="100" readonly></textarea>
+    <script>
+        $(function() {
+          let ES = new EventSource(
+            "{% url 'logs_detail' request.resolver_match.kwargs.container_id %}"
+          );
+          ES.onmessage = function(e) {
+            $('#console').append(`${e.data}\n`);
+            $('#console').scrollTop(
+              $('#console')[0].scrollHeight - $('#console').height()
+            );
+          };
+        });
+        </script>
 {% endblock %}

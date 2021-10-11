@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.views.generic.base import TemplateView
+from .views import logs_detail
 
 """
 tail_docker_ps > views.py からViewを参照
@@ -7,5 +9,6 @@ tail_docker_ps > views.py からViewを参照
 
 urlpatterns = [
     path('', views.ps_list, name='ps_list'),
-    path('docker_logs/<str:container_id>/', views.logs_detail, name='logs_detail'),
+    path('docker_logs/<str:container_id>/', TemplateView.as_view(template_name='tail_docker_ps/logs_view.html'), name='index'),
+    path('docker/logs/<str:container_id>/', views.logs_detail, name='logs_detail'),
 ]
