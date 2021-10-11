@@ -5,7 +5,7 @@
 
     <!-- Docker で起動中のコンテナを表示する -->>
     {% for docker_ps in docker_ps_list %}
-        <p><a href="">{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
+        <p><a href="{% url 'logs_detail' container_id=docker_ps.CONTAINER_ID %}">{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
     {% endfor %}
 
 {% endblock %}
