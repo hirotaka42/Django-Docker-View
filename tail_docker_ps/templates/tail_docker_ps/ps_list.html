@@ -7,7 +7,7 @@
     {% for docker_ps in docker_ps_list %}
         <!-- コンテナIDを tail_docker_ps\urls.py の　name='logs_detail' があるURL処理に渡し、  -->
         <!-- 戻り値として docker_logs/<str:container_id>/ を作成し返却する -->
-        <p><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" target="_blank" rel="noopener noreferrer" >{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
+        <p><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer" >{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
     {% endfor %}
 
 {% endblock %}
