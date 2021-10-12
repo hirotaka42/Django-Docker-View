@@ -29,7 +29,31 @@ def logs_detail(request,container_id):
 def _stream_docker_logs(container):
     # , since=datetime.utcfromtimestamp(time.time())
     # stream=True 後にsince オプションをつけてあげると出力を限定できる
+    tmp = []
     for line in container.logs(
-            stream=True):
-        yield 'data: {}\n\n'.format(line.decode('utf-8'))
-        time.sleep(0.1)
+            stream=True, tail=5):
+        #num = line
+        #str_num = str(num)
+        
+        if line != b'\n':
+            #ここには 正常な文字列と 単体文字列が混合している
+            
+            if len(line) > 10:
+                #正常な文字列の場合
+                yield 'data: {}\n\n'.format(line.decode("utf-8"))
+                time.sleep(0.1)
+            else:
+                #異常文字列の場合 stack
+                tmp.append(str(line.decode("utf-8")))
+                #yield 'data: {}\n\n'.format(str_num.decode("utf-8"))
+            
+        elif line == b'\n':
+            #ここは　完全な '\n'のみがヒットしたときの処理
+            yield 'data: {}\n\n'.format(str(tmp))
+            yield 'data: {}\n\n'.format("################################################")
+            time.sleep(0.1)
+            tmp = []
+
+        else :
+            pass
+            time.sleep(1)
