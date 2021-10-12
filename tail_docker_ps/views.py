@@ -14,8 +14,9 @@ def ps_list(request):
 
 def logs_detail(request,container_id):
     """
-    引数 container_id を tail_docker_ps/logs_view.html へ渡し、
-    logs_detail ページを render する 
+    JQueryのnew EventSourceでEventとして呼ばれる (../templates/tail_docker_ps/logs_view.html内に記述)
+    引数 container_id を 用いてコンテナのログを取得し
+    StreamingHttpResponse で 取得、整形したlog一行分ずつを返却する
     """
     # docker インスタンス(client2)の作成
     client2 = docker.from_env()
@@ -24,36 +25,37 @@ def logs_detail(request,container_id):
         _stream_docker_logs(container),
         content_type='text/event-stream'
     )
-    # return render(request, 'tail_docker_ps/logs_view.html', {'container_id': container_id})
 
 def _stream_docker_logs(container):
-    # , since=datetime.utcfromtimestamp(time.time())
+    """
+    log出力においてイテレータで文字列を返却してくれるが、１文字が返却される場合がある
+    原因は不明だが要因として終端文字が'\r\n'や-json.logにおいて
+    出力されたlogの内容によりエスケープが外れてしまうことが要因だと考えられる
+
+    修正方法：
+    文字はbytes型で来る。文字列ではなかった場合、これをスタックし終端文字列の'\n'をポイントとして
+    スタックしたbeytesを文字コードUTF-8にデコード,str変換し文字列として返却
+    """
+    # since=datetime.utcfromtimestamp(time.time())
     # stream=True 後にsince オプションをつけてあげると出力を限定できる
-    tmp = []
+    tmp = bytearray(b'')
     for line in container.logs(
-            stream=True, tail=5):
-        #num = line
-        #str_num = str(num)
-        
+            stream=True, tail=250):
+
         if line != b'\n':
-            #ここには 正常な文字列と 単体文字列が混合している
+            #このブロックは正常な文字列と 単体文字列が混合している
             
             if len(line) > 10:
                 #正常な文字列の場合
                 yield 'data: {}\n\n'.format(line.decode("utf-8"))
-                time.sleep(0.1)
+                time.sleep(0.01)
             else:
                 #異常文字列の場合 stack
-                tmp.append(str(line.decode("utf-8")))
-                #yield 'data: {}\n\n'.format(str_num.decode("utf-8"))
+                tmp += bytes(line)
             
         elif line == b'\n':
-            #ここは　完全な '\n'のみがヒットしたときの処理
-            yield 'data: {}\n\n'.format(str(tmp))
-            yield 'data: {}\n\n'.format("################################################")
-            time.sleep(0.1)
-            tmp = []
-
-        else :
-            pass
-            time.sleep(1)
+            #完全な '\n'のみがヒットしたときの処理
+            yield 'data: {}\n\n'.format(str(tmp.decode("utf-8")))
+            time.sleep(0.01)
+            #返却後は初期化
+            tmp = bytearray(b'')
