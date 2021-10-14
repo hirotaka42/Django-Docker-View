@@ -1,13 +1,42 @@
 {% extends 'tail_docker_ps/base.html' %}
 
 {% block content %}
-    <p class="docker-ps-list"> CONTAINER_ID <span style="margin-right: 24px;"></span> NAMES </p>
+    <table class="layout-table01">
+        <colgroup span='1' class="container_id"></colgroup>
+        <colgroup span='2' class="container_image"></colgroup>
+        <colgroup span='3' class="container_command"></colgroup>
+        <colgroup span='4' class="container_created"></colgroup>
+        <colgroup span='5' class="container_status"></colgroup>
+        <colgroup span='6' class="container_ports"></colgroup>
+        <colgroup span='7' class="container_names"></colgroup>
 
-    <!-- Docker で起動中のコンテナを表示する -->>
-    {% for docker_ps in docker_ps_list %}
-        <!-- コンテナIDを tail_docker_ps\urls.py の　name='logs_detail' があるURL処理に渡し、  -->
-        <!-- 戻り値として docker_logs/<str:container_id>/ を作成し返却する -->
-        <p><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer" >{{ docker_ps.CONTAINER_ID }} <span style="margin-right: 24px;"></span> {{ docker_ps.NAME }}</a></p>
-    {% endfor %}
+        <tr>
+            <td><p><samp>CONTAINER ID</samp></p></td>
+            <td><p>IMAGE</p></td>
+            <td><p>COMMAND</p></td>
+            <td><p>CREATED</p></td>
+            <td><p>STATUS</p></td>
+            <td><p>PORTS</p></td>
+            <td><p>NAMES</p></td>
+        </tr>
+  
+        
+        <!-- Docker で起動中のコンテナを表示する -->
+        {% for docker_ps in docker_ps_list %}
+            <tr>
+                <!-- <samp> を用いることで idの表示を揃えている -->
+                <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer"><samp>{{ docker_ps.CONTAINER_ID }}</samp></a></td>
+                <td>{{ docker_ps.IMAGE }}</td>
+                <td>"{{ docker_ps.COMMAND }}"</td>
+                <td>{{ docker_ps.CREATED }}</td>
+                <td>{{ docker_ps.STATUS }}</td>
+                <td>{{ docker_ps.PORT }}</td>
+                <!-- コンテナIDを tail_docker_ps\urls.py の　name='logs_detail' があるURL処理に渡し、  -->
+                <!-- 戻り値として docker_logs/<str:container_id>/ を作成し返却する -->
+                <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer">{{ docker_ps.NAME }}</a></td>
+            </tr>
+        {% endfor %}
+        
+    </table>
 
 {% endblock %}
