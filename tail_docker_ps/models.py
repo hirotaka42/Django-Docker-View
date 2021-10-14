@@ -4,6 +4,56 @@ from django.utils import timezone
 import docker
 
 # Create your models here.
+def ps_port(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の PORTSの値を返却する
+
+    """
+    pk_tmp = []
+    if str(container.attrs['NetworkSettings']['Ports']) is None:
+        PORT = ''
+    else:
+        PORTS = container.attrs['NetworkSettings']['Ports']
+        # dictに格納されている最初の値を取得
+        PORT_Key1 = next(iter(PORTS.keys()))
+
+        if PORTS[PORT_Key1] is None:
+            # # ポートフォワーディング設定が無く、要素が１つの場合
+            # 40772/tcp 
+            PORT = PORT_Key1
+        else:
+            # ポートフォワーディング設定がある場合
+            if len(PORTS.keys()) > 1:
+                # 1つ以上要素がある場合
+                # 9229/tcp, 0.0.0.0:40772->40772/tcp,
+                for PK in PORTS.keys():
+                    pk_tmp.append(PK)
+                    
+                #尚且つ,2つ要素がある場合
+                if len(PORTS[PORT_Key1]) > 1:
+                    str_port_first = pk_tmp[1] + ', ' + PORTS[PORT_Key1][0]['HostIp'] + ':' + PORTS[PORT_Key1][0]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    str_port_secnd = ', ' + PORTS[PORT_Key1][1]['HostIp'] + ':' + PORTS[PORT_Key1][1]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    PORT = str_port_first + str_port_secnd
+                #1つ要素がある場合
+                else:
+                    str_port = pk_tmp[1] + ', ' + PORTS[PORT_Key1][0]['HostIp'] + ':' + PORTS[PORT_Key1][0]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    PORT = str_port
+            else:
+                # 0.0.0.0:40772->40772/tcp 
+                #尚且つ,2つ要素がある場合
+                if len(PORTS[PORT_Key1]) > 1:
+                    str_port_first = PORTS[PORT_Key1][0]['HostIp'] + ':' + PORTS[PORT_Key1][0]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    str_port_secnd = ', ' + PORTS[PORT_Key1][1]['HostIp'] + ':' + PORTS[PORT_Key1][1]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    PORT = str_port_first + str_port_secnd
+                #1つ要素がある場合
+                else:
+                    str_port = PORTS[PORT_Key1][0]['HostIp'] + ':' + PORTS[PORT_Key1][0]['HostPort'] + '->' + next(iter(PORTS.keys()))
+                    PORT = str_port
+                
+            
+    # PORT出力設定　ここまで
+    return PORT
+
 
 class Docker():
     # dockerインスタンス作成
@@ -25,6 +75,7 @@ class Docker():
         """
         return self.client.containers.list()
 
+    
     def ps_list(self) -> list:
         """
         起動済みの docker コンテナID と NAME の取得
@@ -34,8 +85,6 @@ class Docker():
 
         """
         docker_ps = []
-        #client = docker.from_env()
-        #Client = self.client
         docker_containers = self.client.containers.list()
         for container in docker_containers:
             tmp = {}
@@ -45,10 +94,7 @@ class Docker():
             tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
             tmp['CREATED'] = 'CREATED'
             tmp['STATUS'] = 'STATUS'
-            PORTS = container.attrs['NetworkSettings']['Ports']
-            for key in PORTS:
-                PORT = key
-            tmp['PORT'] = PORT
+            tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
             docker_ps.append(tmp)
             
