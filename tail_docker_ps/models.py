@@ -40,11 +40,18 @@ class Docker():
         for container in docker_containers:
             tmp = {}
             CONTAINER = str(container)
-            CONTAINER_ID = CONTAINER[12:22]
-            NAME = str(container.name)
-            tmp['CONTAINER_ID'] = CONTAINER_ID
-            tmp['NAME'] = NAME
+            tmp['CONTAINER_ID'] = CONTAINER[12:22]
+            tmp['IMAGE'] = container.attrs['Config']['Image']
+            tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
+            tmp['CREATED'] = 'CREATED'
+            tmp['STATUS'] = 'STATUS'
+            PORTS = container.attrs['NetworkSettings']['Ports']
+            for key in PORTS:
+                PORT = key
+            tmp['PORT'] = PORT
+            tmp['NAME'] = str(container.name)
             docker_ps.append(tmp)
+            
 
         return docker_ps
 

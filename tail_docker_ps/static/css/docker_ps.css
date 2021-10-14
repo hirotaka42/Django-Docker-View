@@ -21,11 +21,22 @@ div.view-Results {
     padding-top: 46px; /* 要素内側のtopの距離 をオーバーライド*/
     color: #828282;
     border-radius: 50px;
-    background: #e0e0e0;
+    background: #EBECF0;
     box-shadow:  25px 25px 50px #bebebe,
                 -25px -25px 50px #ffffff;
 }
 
 p.docker-ps-list.h2 {
     padding-top: 16px; /* 要素内側のtopの距離 をオーバーライド*/
+}
+
+
+/* docker-ps table*/
+table.layout-table01 {
+    table-layout: auto;
+	width: 100%;
+	text-align: left;           /* textを左揃え*/
+    border-collapse: separate;  /* 列の横幅を表示*/
+    border-spacing: 8px 0px;    /* 列の横幅に対する設定*/
+    
 }
