@@ -48,7 +48,7 @@ def _stream_docker_logs(container):
             if len(line) > 10:
                 #正常な文字列の場合
                 yield 'data: {}\n\n'.format(line.decode("utf-8"))
-                time.sleep(0.01)
+                time.sleep(0.001)
             else:
                 #異常文字列の場合 stack
                 tmp += bytes(line)
@@ -58,6 +58,6 @@ def _stream_docker_logs(container):
             tmp += bytes(line)
             #stackしておいた文字列を返却
             yield 'data: {}\n\n'.format(str(tmp.decode("utf-8")))
-            time.sleep(0.01)
+            time.sleep(0.001)
             #返却後は初期化
             tmp = bytearray(b'')
