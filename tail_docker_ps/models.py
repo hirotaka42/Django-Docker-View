@@ -2,8 +2,53 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 import docker
+import datetime
 
 # Create your models here.
+def getPastDay(y, m, d):
+    return (datetime.date.today() - datetime.datetime(year=y,month=m,day=d).date()).days
+
+def ps_created(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の CREATEDの値を返却する
+
+    """
+    time_tmp = []
+    str_y = ' years ago'
+    str_w = ' weeks ago'
+    str_d = ' days ago'
+    str_h = ' hours ago'
+    str_min = ' minutes ago'
+    str_sec = ' seconds ago'
+
+    if str(container.attrs['Created']) is None:
+        CREATED = 'None'
+    else:
+        created = container.attrs['Created']
+        time_tmp = int(getPastDay(int(created[:4]), int(created[5:7]), int(created[8:10])))
+        if time_tmp > 365:
+            #年表示
+            tmp_years = int(time_tmp / 360)
+            CREATED = str(tmp_years) + str_y
+        elif time_tmp > 30:
+            #月表示
+            tmp_moth = int(time_tmp / 30)
+            CREATED = str(time_tmp)
+        elif time_tmp > 7:
+            tmp_weeks = int(time_tmp / 7)
+            if tmp_weeks < 1:
+                #週間表示
+                CREATED = str(time_weeks) + str_w
+        elif time_tmp > 1:
+            #日にち表示
+            CREATED = str(time_tmp) + str_d
+        else:
+            # 1日以下なら hour, minutes, seconds,
+            CREATED = '1日以下なら hour, minutes, seconds,'
+
+
+    return CREATED
+
 def ps_port(container) -> str:
     """
     引数のコンテナ情報からdocker ps 出力時の PORTSの値を返却する
@@ -92,7 +137,7 @@ class Docker():
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = container.attrs['Config']['Image']
             tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
-            tmp['CREATED'] = 'CREATED'
+            tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = 'STATUS'
             tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
