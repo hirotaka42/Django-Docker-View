@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
+#from django.utils import timezone
 import docker
 import datetime
+from pytz import timezone
 
 # Create your models here.
 def getPastDay(y, m, d):
@@ -70,8 +71,8 @@ def ps_created(container) -> str:
             CREATED = str(days_tmp) + str_d
         else:
             # 2日以下なら hour, minutes, seconds,
-            #現在日時の取得
-            dt_now = datetime.datetime.now( )
+            #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
+            dt_now = datetime.datetime.now(timezone('UTC'))
             #日時フォーマットをdocker ps createdに合わせる
             is_dt_now = str(dt_now.isoformat())
             dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
