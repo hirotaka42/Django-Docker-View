@@ -83,7 +83,7 @@ def ps_created(container) -> str:
             #月表示
             tmp_moth = int(days_tmp / 30)
             CREATED = str(days_tmp) + str_m
-        elif days_tmp > 7:
+        elif days_tmp > 8:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
@@ -139,7 +139,7 @@ def ps_status(container) -> str:
             #月表示
             tmp_moth = int(days_tmp / 30)
             CREATED = str(days_tmp) + str_m
-        elif days_tmp > 7:
+        elif days_tmp > 8:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
