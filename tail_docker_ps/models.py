@@ -9,53 +9,37 @@ from pytz import timezone
 def getPastDay(y, m, d):
     return (datetime.date.today() - datetime.datetime(year=y,month=m,day=d).date()).days
 
-def is_Time_Calculation(seconds:int)->str:
+def is_Time_Calculation(seconds:int,viewflag:int)->str:
     """
     コンテナの経過時間を文字列で返却
+    args: seconds:現時刻との差分の秒数    viewflag: 0-CREATED  1-STATUS
+    return: 
     """
     is_Elapsed_time = seconds
     is_Elapsed_minits_time = int(is_Elapsed_time / 60)
     is_Elapsed_hours_time = int(is_Elapsed_minits_time / 60)
     
+    
     if is_Elapsed_hours_time >= 1:
         # 一時間以上経過している場合
         if is_Elapsed_hours_time == 1:
-            return 'About an' +' hours ago'
+            tmp = 'About an' +' hours'
         else:
-            return str(is_Elapsed_hours_time ) +' hours ago'
+            tmp = str(is_Elapsed_hours_time ) +' hours'
             
     else:
         # 一時間以内なら分数を返却
         if is_Elapsed_minits_time == 1:
-            return 'About a' + ' minutes ago'
+            tmp = 'About a' + ' minutes'
         elif is_Elapsed_minits_time > 1:
-            return str(is_Elapsed_minits_time) +' minutes ago'
+            tmp = str(is_Elapsed_minits_time) +' minutes'
         else:
-            return str(is_Elapsed_time) +' seconds ago'
+            tmp = str(is_Elapsed_time) +' seconds'
 
-def is_Time_Calculation_status(seconds:int)->str:
-    """
-    コンテナの経過時間を文字列で返却
-    """
-    is_Elapsed_time = seconds
-    is_Elapsed_minits_time = int(is_Elapsed_time / 60)
-    is_Elapsed_hours_time = int(is_Elapsed_minits_time / 60)
-    
-    if is_Elapsed_hours_time >= 1:
-        # 一時間以上経過している場合
-        if is_Elapsed_hours_time == 1:
-            return 'About an' +' hours'
-        else:
-            return str(is_Elapsed_hours_time ) +' hours'
-            
-    else:
-        # 一時間以内なら分数を返却
-        if is_Elapsed_minits_time == 1:
-            return 'About a' + ' minutes'
-        elif is_Elapsed_minits_time > 1:
-            return str(is_Elapsed_minits_time) +' minutes'
-        else:
-            return str(is_Elapsed_time) +' seconds'
+    if viewflag == 0:
+        return tmp + ' ago'
+    else :
+        return tmp
 
 
 def ps_created(container) -> str:
@@ -106,10 +90,10 @@ def ps_created(container) -> str:
             if days_tmp > 0:
                 # 1日以上なら１日分の秒数を追加
                 is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
-                CREATED = is_Time_Calculation(is_Elapsed_time)
+                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=0)
             else:
                 is_Elapsed_time = int(td1.seconds)
-                CREATED = is_Time_Calculation(is_Elapsed_time)
+                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=0)
 
 
     return CREATED
@@ -163,10 +147,10 @@ def ps_status(container) -> str:
             if days_tmp > 0:
                 # 1日以上なら１日分の秒数を追加
                 is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
-                CREATED = is_Time_Calculation_status(is_Elapsed_time)
+                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=1)
             else:
                 is_Elapsed_time = int(td1.seconds)
-                CREATED = is_Time_Calculation_status(is_Elapsed_time)
+                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=1)
 
 
     return 'Up ' + CREATED
