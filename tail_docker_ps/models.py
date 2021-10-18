@@ -69,12 +69,20 @@ def ps_created(container) -> str:
     str_w = ' weeks ago'
     str_d = ' days ago'
 
+    #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
+    dt_now = datetime.datetime.now(timezone('UTC'))
+    #日時フォーマットをdocker ps createdに合わせる
+    is_dt_now = str(dt_now.isoformat())
+
     if str(container.attrs['Created']) is None:
         CREATED = 'None'
     else:
         is_created_dt = container.attrs['Created']
-        is_created_time = container.attrs['Created'][11:]
-        days_tmp = int(getPastDay(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10])))
+        # datetimeメソッドを用いて日時の差分を計算
+        dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
+        dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
+        td1 = dt2 - dt1
+        days_tmp = int(td1.days)
         if days_tmp > 365:
             #年表示
             tmp_years = int(days_tmp / 360)
@@ -83,28 +91,21 @@ def ps_created(container) -> str:
             #月表示
             tmp_moth = int(days_tmp / 30)
             CREATED = str(days_tmp) + str_m
-        elif days_tmp > 8:
+        elif days_tmp > 10:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
                 CREATED = str(tmp_weeks) + ' week ago'
             else:
                 CREATED = str(tmp_weeks) + str_w
-        elif days_tmp > 1:
+        elif days_tmp > 2:
             #日にち表示
             CREATED = str(days_tmp) + str_d
         else:
             # 2日以下なら hour, minutes, seconds,
-            #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
-            dt_now = datetime.datetime.now(timezone('UTC'))
-            #日時フォーマットをdocker ps createdに合わせる
-            is_dt_now = str(dt_now.isoformat())
-            dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
-            dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
-            td1 = dt2 - dt1
-            if int(td1.days) > 0:
+            if days_tmp > 0:
                 # 1日以上なら１日分の秒数を追加
-                is_Elapsed_time = int(td1.seconds) + 86400*int(td1.days)
+                is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
                 CREATED = is_Time_Calculation(is_Elapsed_time)
             else:
                 is_Elapsed_time = int(td1.seconds)
@@ -125,12 +126,20 @@ def ps_status(container) -> str:
     str_w = ' weeks'
     str_d = ' days'
 
+    #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
+    dt_now = datetime.datetime.now(timezone('UTC'))
+    #日時フォーマットをdocker ps createdに合わせる
+    is_dt_now = str(dt_now.isoformat())
+
     if str(container.attrs['State']['StartedAt']) is None:
         CREATED = 'None'
     else:
         is_created_dt = container.attrs['State']['StartedAt']
-        is_created_time = container.attrs['State']['StartedAt'][11:]
-        days_tmp = int(getPastDay(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10])))
+        # datetimeメソッドを用いて日時の差分を計算
+        dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
+        dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
+        td1 = dt2 - dt1
+        days_tmp = int(td1.days)
         if days_tmp > 365:
             #年表示
             tmp_years = int(days_tmp / 360)
@@ -139,28 +148,21 @@ def ps_status(container) -> str:
             #月表示
             tmp_moth = int(days_tmp / 30)
             CREATED = str(days_tmp) + str_m
-        elif days_tmp > 8:
+        elif days_tmp > 10:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
                 CREATED = str(tmp_weeks) + ' week'
             else:
                 CREATED = str(tmp_weeks) + str_w
-        elif days_tmp > 1:
+        elif days_tmp > 2:
             #日にち表示
             CREATED = str(days_tmp) + str_d
         else:
             # 2日以下なら hour, minutes, seconds,
-            #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
-            dt_now = datetime.datetime.now(timezone('UTC'))
-            #日時フォーマットをdocker ps createdに合わせる
-            is_dt_now = str(dt_now.isoformat())
-            dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
-            dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
-            td1 = dt2 - dt1
-            if int(td1.days) > 0:
+            if days_tmp > 0:
                 # 1日以上なら１日分の秒数を追加
-                is_Elapsed_time = int(td1.seconds) + 86400*int(td1.days)
+                is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
                 CREATED = is_Time_Calculation_status(is_Elapsed_time)
             else:
                 is_Elapsed_time = int(td1.seconds)
