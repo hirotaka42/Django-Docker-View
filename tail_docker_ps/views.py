@@ -12,6 +12,12 @@ def ps_list(request):
     docker_ps_list = dockerClass.ps_list()
     return render(request, 'tail_docker_ps/ps_list.html', {'docker_ps_list':docker_ps_list})
 
+def ps_all_list(request):
+    dockerClass = Docker()
+    ps_all_list = dockerClass.ps_all_list()
+    return render(request, 'tail_docker_ps/ps_all_list.html', {'ps_all_list':ps_all_list})
+
+
 def logs_detail(request,container_id):
     """
     JQueryのnew EventSourceでEventとして呼ばれる (../templates/tail_docker_ps/logs_view.html内に記述)
