@@ -9,15 +9,18 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
-    <div class="docker-ps">
-        <h1><a href="/">Docker View</a></h1>
-        <h1><a href="/docker_ps_all/">-a (オプション表示)</a></h1>
-    </div>
+    <body>
 
+        <div class="docker-ps">
+            <h1><a href="/">Docker View</a></h1>
+            <h1><a href="/docker_ps_all/">-a (オプション表示)</a></h1>
+        </div>
 
-    <div class="view-Results">
-        {% block content %}
-        {% endblock %}
-    </div>
+        <div class="view-Results">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </body>
 
 </html>
