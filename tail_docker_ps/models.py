@@ -122,6 +122,16 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
     elif selectflag == 1:
         return 'Up ' + str_tmp
 
+def ps_cmd(container) -> str:
+
+    if container.attrs['Config']['Entrypoint'] is None:
+        tmp = ' '.join(container.attrs['Config']['Cmd'])
+    else:
+        tmp = ' '.join(container.attrs['Config']['Entrypoint'])
+        
+    return str(tmp)
+    
+
     
 def ps_created(container) -> str:
     """
@@ -226,7 +236,7 @@ class Docker():
             CONTAINER = str(container)
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = container.attrs['Config']['Image']
-            tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
+            tmp['COMMAND'] = ps_cmd(container)
             tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = ps_status(container)
             tmp['PORT'] = ps_port(container)
@@ -251,7 +261,7 @@ class Docker():
             CONTAINER = str(container)
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = container.attrs['Config']['Image']
-            tmp['COMMAND'] = 'COMMAND'
+            tmp['COMMAND'] = ps_cmd(container)
             tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = 'STATUS'
             tmp['PORT'] = ps_port(container)
