@@ -22,18 +22,18 @@
 
     
     <!-- Docker で起動中のコンテナを表示する -->
-    {% for docker_ps in docker_ps_list %}
+    {% for ps_all in ps_all_list %}
         <tr>
             <!-- <samp> を用いることで idの表示を揃えている -->
-            <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer"><samp>{{ docker_ps.CONTAINER_ID }}</samp></a></td>
-            <td>{{ docker_ps.IMAGE }}</td>
-            <td>"{{ docker_ps.COMMAND }}"</td>
-            <td>{{ docker_ps.CREATED }}</td>
-            <td>{{ docker_ps.STATUS }}</td>
-            <td>{{ docker_ps.PORT }}</td>
+            <td><a href="{% url 'index' container_id=ps_all.CONTAINER_ID %}" rel="noopener noreferrer"><samp>{{ ps_all.CONTAINER_ID }}</samp></a></td>
+            <td>{{ ps_all.IMAGE }}</td>
+            <td>"{{ ps_all.COMMAND }}"</td>
+            <td>{{ ps_all.CREATED }}</td>
+            <td>{{ ps_all.STATUS }}</td>
+            <td>{{ ps_all.PORT }}</td>
             <!-- コンテナIDを tail_docker_ps\urls.py の　name='logs_detail' があるURL処理に渡し、  -->
             <!-- 戻り値として docker_logs/<str:container_id>/ を作成し返却する -->
-            <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}" rel="noopener noreferrer">{{ docker_ps.NAME }}</a></td>
+            <td><a href="{% url 'index' container_id=ps_all.CONTAINER_ID %}" rel="noopener noreferrer">{{ ps_all.NAME }}</a></td>
         </tr>
     {% endfor %}
     

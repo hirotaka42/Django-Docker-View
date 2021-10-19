@@ -1,23 +1,24 @@
 {% extends 'tail_docker_ps/base.html' %}
 
 {% block content %}
-    <div class="docker-ps-list">
-        <p>docker logs -f {{ request.resolver_match.kwargs.container_id }}</p>
-    </div>
-    <!-- rows="30" cols="100"-->
-    <textarea id="console" style="width:100%;height:60%" readonly></textarea>
-    <script>
-        $(function() {
-          let ES = new EventSource(
-            "{% url 'logs_detail' request.resolver_match.kwargs.container_id %}"
-          );
-          ES.onmessage = function(e) {
-            $('#console').append(`${e.data}\n`);
-            $('#console').scrollTop(
-              $('#console')[0].scrollHeight - $('#console').height()
-            );
-          };
-        });
-        </script>
-        
+
+<div class="docker-ps-list">
+    <p>docker logs -f {{ request.resolver_match.kwargs.container_id }}</p>
+</div>
+<!-- rows="30" cols="100"-->
+<textarea id="console" style="width:100%;height:60%" readonly></textarea>
+<script>
+    $(function() {
+      let ES = new EventSource(
+        "{% url 'logs_detail' request.resolver_match.kwargs.container_id %}"
+      );
+      ES.onmessage = function(e) {
+        $('#console').append(`${e.data}\n`);
+        $('#console').scrollTop(
+          $('#console')[0].scrollHeight - $('#console').height()
+        );
+      };
+    });
+</script>
+ 
 {% endblock %}

@@ -17,7 +17,8 @@ body {
 /* div.view-ps  起動済みの docker コンテナID と NAME の表示View */
 div.view-Results {
     margin: 20px; /* 絶対的な寸法 要素外側の距離 */
-    padding: 64px;     /* 要素内側の距離 */
+    margin-bottom: 32px; /* 要素外側の下の距離 をオーバーライド*/
+    padding: 52px;     /* 要素内側の距離 */
     padding-top: 46px; /* 要素内側のtopの距離 をオーバーライド*/
     color: #828282;
     border-radius: 50px;
@@ -40,3 +41,7 @@ table.layout-table01 {
     border-spacing: 8px 0px;    /* 列の横幅に対する設定*/
     
 }
+
+div.docker-ps {
+    display: flex;
+  }

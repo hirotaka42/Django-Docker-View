@@ -253,6 +253,28 @@ class Docker():
 
         return docker_ps
 
-    
+    def ps_all_list(self) -> list:
+        """
+        起動済みの docker コンテナID と NAME の取得
+        <class 'list'>
+        return [{'CONTAINER_ID': 'ed98a9a688', 'NAME': 'docker-wp_wordpress_1'}, 
+         {'CONTAINER_ID': '4f02ce3412', 'NAME': 'docker-wp_db_1'}]
 
+        """
+        docker_ps = []
+        docker_containers = self.client.containers.list()
+        for container in docker_containers:
+            tmp = {}
+            CONTAINER = str(container)
+            tmp['CONTAINER_ID'] = CONTAINER[12:22]
+            tmp['IMAGE'] = container.attrs['Config']['Image']
+            tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
+            tmp['CREATED'] = ps_created(container)
+            tmp['STATUS'] = ps_status(container)
+            tmp['PORT'] = ps_port(container)
+            tmp['NAME'] = str(container.name)
+            docker_ps.append(tmp)
+            
+
+        return docker_ps
 
