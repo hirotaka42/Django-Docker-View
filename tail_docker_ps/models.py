@@ -33,10 +33,10 @@ def is_GetElapsedDays(years, months, days, hours, minits, seconds):
     #td1.microseconds 
     return td1
 
-def is_Time_Calculation(seconds:int,viewflag:int)->str:
+def is_Time_Calculation(seconds:int)->str:
     """
     コンテナの経過時間を文字列で返却
-    args: seconds:現時刻との差分の秒数    viewflag: 0-CREATED  1-STATUS
+    args: seconds:現時刻との差分の秒数  
     return: 
     """
     is_Elapsed_time = seconds
@@ -60,67 +60,16 @@ def is_Time_Calculation(seconds:int,viewflag:int)->str:
         else:
             tmp = str(is_Elapsed_time) +' seconds'
 
-    if viewflag == 0:
-        return tmp + ' ago'
-    else :
-        return tmp
+    return tmp
 
 
-def ps_created(container) -> str:
+
+
+def is_CalculateContainerInfo(container,selectflag:int)->str:
     """
-    引数のコンテナ情報からdocker ps 出力時の CREATEDの値を返却する
-
-    """
-    days_tmp = []
-    str_y = ' years ago'
-    str_m = ' months ago'
-    str_w = ' weeks ago'
-    str_d = ' days ago'
-
-
-    if str(container.attrs['Created']) is None:
-        CREATED = 'None'
-    else:
-        is_created_dt = container.attrs['Created']
-        # datetimeメソッドを用いて日時の差分を計算
-        td1 = is_GetElapsedDays(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
-        days_tmp = int(td1.days)
-        if days_tmp > 365:
-            #年表示
-            tmp_years = int(days_tmp / 360)
-            CREATED = str(tmp_years) + str_y
-        elif days_tmp > 30:
-            #月表示
-            tmp_moth = int(days_tmp / 30)
-            CREATED = str(tmp_moth) + str_m
-        elif days_tmp > 10:
-            tmp_weeks = int(days_tmp / 7)
-            #週間表示
-            if tmp_weeks == 1:
-                CREATED = str(tmp_weeks) + ' week ago'
-            else:
-                CREATED = str(tmp_weeks) + str_w
-        elif days_tmp > 2:
-            #日にち表示
-            CREATED = str(days_tmp) + str_d
-        else:
-            # 2日以下なら hour, minutes, seconds,
-            if days_tmp > 0:
-                # 1日以上なら１日分の秒数を追加
-                is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
-                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=0)
-            else:
-                is_Elapsed_time = int(td1.seconds)
-                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=0)
-
-
-    return CREATED
-
-
-def ps_status(container) -> str:
-    """
-    引数のコンテナ情報からdocker ps 出力時の STATUSの値を返却する
-
+    コンテナの経過時間を文字列で返却
+    args: seconds:現時刻との差分の秒数    viewflag: 0-CREATED  1-STATUS
+    return: 
     """
     days_tmp = []
     str_y = ' years'
@@ -128,43 +77,66 @@ def ps_status(container) -> str:
     str_w = ' weeks'
     str_d = ' days'
 
-    if str(container.attrs['State']['StartedAt']) is None:
-        CREATED = 'None'
+    if selectflag == 0:
+        is_select_info = container.attrs['Created']
+    elif selectflag == 1:
+        is_select_info = container.attrs['State']['StartedAt']
+
+
+    if str(is_select_info) is None:
+        str_tmp = 'None'
     else:
-        is_State_StartedAt_dt = container.attrs['State']['StartedAt']
         # datetimeメソッドを用いて日時の差分を計算
-        td1 = is_GetElapsedDays(int(is_State_StartedAt_dt[:4]), int(is_State_StartedAt_dt[5:7]), int(is_State_StartedAt_dt[8:10]), int(is_State_StartedAt_dt[11:13]), int(is_State_StartedAt_dt[14:16]), int(is_State_StartedAt_dt[17:19]))
+        td1 = is_GetElapsedDays(int(is_select_info[:4]), int(is_select_info[5:7]), int(is_select_info[8:10]), int(is_select_info[11:13]), int(is_select_info[14:16]), int(is_select_info[17:19]))
         days_tmp = int(td1.days)
         if days_tmp > 365:
             #年表示
             tmp_years = int(days_tmp / 360)
-            CREATED = str(tmp_years) + str_y
+            str_tmp = str(tmp_years) + str_y
         elif days_tmp > 30:
             #月表示
             tmp_moth = int(days_tmp / 30)
-            CREATED = str(days_tmp) + str_m
+            str_tmp = str(tmp_moth) + str_m
         elif days_tmp > 10:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
-                CREATED = str(tmp_weeks) + ' week'
+                str_tmp = str(tmp_weeks) + ' week'
             else:
-                CREATED = str(tmp_weeks) + str_w
+                str_tmp = str(tmp_weeks) + str_w
         elif days_tmp > 2:
             #日にち表示
-            CREATED = str(days_tmp) + str_d
+            str_tmp = str(days_tmp) + str_d
         else:
             # 2日以下なら hour, minutes, seconds,
             if days_tmp > 0:
                 # 1日以上なら１日分の秒数を追加
                 is_Elapsed_time = int(td1.seconds) + 86400*int(days_tmp)
-                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=1)
+                str_tmp = is_Time_Calculation(is_Elapsed_time)
             else:
                 is_Elapsed_time = int(td1.seconds)
-                CREATED = is_Time_Calculation(is_Elapsed_time,viewflag=1)
+                str_tmp = is_Time_Calculation(is_Elapsed_time)
+
+    if selectflag == 0:
+        return str_tmp + ' ago'
+    elif selectflag == 1:
+        return 'Up ' + str_tmp
+
+    
+def ps_created(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の CREATEDの値を返却する
+
+    """
+    return is_CalculateContainerInfo(container,0)
 
 
-    return 'Up ' + CREATED
+def ps_status(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の STATUSの値を返却する
+
+    """
+    return is_CalculateContainerInfo(container,1)
 
 
 def ps_port(container) -> str:
