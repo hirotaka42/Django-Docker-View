@@ -6,8 +6,32 @@ import datetime
 from pytz import timezone
 
 # Create your models here.
-def getPastDay(y, m, d):
-    return (datetime.date.today() - datetime.datetime(year=y,month=m,day=d).date()).days
+
+def is_GetElapsedDays(years, months, days, hours, minits, seconds):
+    '''
+    経過日時を現在日時と引数で計算し返却します
+
+    一般的にdockerコンテナ内のタイムゾーンは'UTC'になっています。
+    タイムゾーンがJSTに変更されているコンテナの場合
+    時差を追うプログラムは組んでいないため表示がずれる可能性があります。
+    https://note.nkmk.me/python-datetime-isoformat-fromisoformat/
+    https://docs.python.org/ja/3/library/datetime.html
+    '''
+    #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
+    dt_now = datetime.datetime.now(timezone('UTC'))
+    #".isoformat()"メソッドを用いて日時フォーマットを文字列に変換
+    is_dt_now = dt_now.isoformat()
+
+    dt1 = datetime.datetime(years, months, days, hours, minits, seconds)
+    dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
+    td1 = dt2 - dt1
+
+    #datetimeにより以下を取り出せ使用できる:
+    #インスタンスの属性 (読み出しのみ):
+    #td1.days 
+    #td1.seconds
+    #td1.microseconds 
+    return td1
 
 def is_Time_Calculation(seconds:int,viewflag:int)->str:
     """
@@ -53,19 +77,13 @@ def ps_created(container) -> str:
     str_w = ' weeks ago'
     str_d = ' days ago'
 
-    #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
-    dt_now = datetime.datetime.now(timezone('UTC'))
-    #日時フォーマットをdocker ps createdに合わせる
-    is_dt_now = str(dt_now.isoformat())
 
     if str(container.attrs['Created']) is None:
         CREATED = 'None'
     else:
         is_created_dt = container.attrs['Created']
         # datetimeメソッドを用いて日時の差分を計算
-        dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
-        dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
-        td1 = dt2 - dt1
+        td1 = is_GetElapsedDays(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
         days_tmp = int(td1.days)
         if days_tmp > 365:
             #年表示
@@ -110,19 +128,12 @@ def ps_status(container) -> str:
     str_w = ' weeks'
     str_d = ' days'
 
-    #現在日時の取得 #docker コンテナのCreated値は'UTC'で定義されている
-    dt_now = datetime.datetime.now(timezone('UTC'))
-    #日時フォーマットをdocker ps createdに合わせる
-    is_dt_now = str(dt_now.isoformat())
-
     if str(container.attrs['State']['StartedAt']) is None:
         CREATED = 'None'
     else:
-        is_created_dt = container.attrs['State']['StartedAt']
+        is_State_StartedAt_dt = container.attrs['State']['StartedAt']
         # datetimeメソッドを用いて日時の差分を計算
-        dt1 = datetime.datetime(int(is_created_dt[:4]), int(is_created_dt[5:7]), int(is_created_dt[8:10]), int(is_created_dt[11:13]), int(is_created_dt[14:16]), int(is_created_dt[17:19]))
-        dt2 = datetime.datetime(int(is_dt_now[:4]), int(is_dt_now[5:7]), int(is_dt_now[8:10]), int(is_dt_now[11:13]), int(is_dt_now[14:16]), int(is_dt_now[17:19]))
-        td1 = dt2 - dt1
+        td1 = is_GetElapsedDays(int(is_State_StartedAt_dt[:4]), int(is_State_StartedAt_dt[5:7]), int(is_State_StartedAt_dt[8:10]), int(is_State_StartedAt_dt[11:13]), int(is_State_StartedAt_dt[14:16]), int(is_State_StartedAt_dt[17:19]))
         days_tmp = int(td1.days)
         if days_tmp > 365:
             #年表示
