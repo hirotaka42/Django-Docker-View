@@ -262,16 +262,16 @@ class Docker():
 
         """
         docker_ps = []
-        docker_containers = self.client.containers.list()
+        docker_containers = self.client.containers.list(all=True)
         for container in docker_containers:
             tmp = {}
             CONTAINER = str(container)
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = container.attrs['Config']['Image']
-            tmp['COMMAND'] = container.attrs['Config']['Entrypoint'][0]
+            tmp['COMMAND'] = 'COMMAND'
             tmp['CREATED'] = ps_created(container)
-            tmp['STATUS'] = ps_status(container)
-            tmp['PORT'] = ps_port(container)
+            tmp['STATUS'] = 'STATUS'
+            tmp['PORT'] = 'PORT'
             tmp['NAME'] = str(container.name)
             docker_ps.append(tmp)
             

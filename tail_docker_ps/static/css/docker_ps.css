@@ -42,6 +42,7 @@ table.layout-table01 {
     
 }
 
+/* docker-ps titleのラベル表示を横並びに(何故か別のクラス名にすると動かなくなる。なぜ？)*/
 div.docker-ps {
     display: flex;
   }
