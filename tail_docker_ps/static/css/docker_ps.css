@@ -12,6 +12,7 @@ body {
     background-color: #EBECF0;
     padding: 32px;
     padding-top: 12px;
+    
 }
 
 /* div.view-ps  起動済みの docker コンテナID と NAME の表示View */
