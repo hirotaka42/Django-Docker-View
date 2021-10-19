@@ -145,7 +145,7 @@ def ps_port(container) -> str:
 
     """
     pk_tmp = []
-    if str(container.attrs['NetworkSettings']['Ports']) is None:
+    if len(container.attrs['NetworkSettings']['Ports']) < 1:
         PORT = ''
     else:
         PORTS = container.attrs['NetworkSettings']['Ports']
@@ -204,7 +204,7 @@ class Docker():
 
     def containers(self) -> list:
         """
-        起動済みの dockerコンテナID(10桁)リストの取得
+        起動済みの dockerコンテナID(10桁)リスト付きの文字列(23文字-内訳12-22-23)の取得
         <class 'list'>
         return [<Container: ed98a9a688>, <Container: 4f02ce3412>]
         """
@@ -254,7 +254,7 @@ class Docker():
             tmp['COMMAND'] = 'COMMAND'
             tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = 'STATUS'
-            tmp['PORT'] = 'PORT'
+            tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
             docker_ps.append(tmp)
             
