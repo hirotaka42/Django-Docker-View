@@ -122,6 +122,19 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
     elif selectflag == 1:
         return 'Up ' + str_tmp
 
+def ps_image(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の IMAGEの値を返却する
+
+    """
+
+    if container.attrs['Config']['Image'][:6] == 'sha256':
+        image_tmp = container.attrs['Config']['Image'][7:19]
+    else:
+        image_tmp = container.attrs['Config']['Image']
+
+    return image_tmp
+
 def ps_cmd(container) -> str:
 
     if container.attrs['Config']['Entrypoint'] is None:
@@ -235,7 +248,7 @@ class Docker():
             tmp = {}
             CONTAINER = str(container)
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
-            tmp['IMAGE'] = container.attrs['Config']['Image']
+            tmp['IMAGE'] = ps_image(container)
             tmp['COMMAND'] = ps_cmd(container)
             tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = ps_status(container)
@@ -260,7 +273,7 @@ class Docker():
             tmp = {}
             CONTAINER = str(container)
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
-            tmp['IMAGE'] = container.attrs['Config']['Image']
+            tmp['IMAGE'] = ps_image(container)
             tmp['COMMAND'] = ps_cmd(container)
             tmp['CREATED'] = ps_created(container)
             tmp['STATUS'] = 'STATUS'
