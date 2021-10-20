@@ -89,7 +89,7 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
         # datetimeメソッドを用いて日時の差分を計算
         td1 = is_GetElapsedDays(int(is_select_info[:4]), int(is_select_info[5:7]), int(is_select_info[8:10]), int(is_select_info[11:13]), int(is_select_info[14:16]), int(is_select_info[17:19]))
         days_tmp = int(td1.days)
-        if days_tmp > 365:
+        if days_tmp > 730:
             #年表示
             tmp_years = int(days_tmp / 360)
             str_tmp = str(tmp_years) + str_y
