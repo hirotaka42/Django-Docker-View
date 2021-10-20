@@ -68,7 +68,7 @@ def is_Time_Calculation(seconds:int)->str:
 def is_CalculateContainerInfo(container,selectflag:int)->str:
     """
     コンテナの経過時間を文字列で返却
-    args: seconds:現時刻との差分の秒数    viewflag: 0-CREATED  1-STATUS
+    args: seconds:現時刻との差分の秒数    viewflag: 0-CREATED  1-STATUS  2-FinishedAt
     return: 
     """
     days_tmp = []
@@ -81,6 +81,8 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
         is_select_info = container.attrs['Created']
     elif selectflag == 1:
         is_select_info = container.attrs['State']['StartedAt']
+    elif selectflag == 2:
+        is_select_info = container.attrs['State']['FinishedAt']
 
 
     if str(is_select_info) is None:
@@ -118,9 +120,12 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
                 str_tmp = is_Time_Calculation(is_Elapsed_time)
 
     if selectflag == 0:
-        return str_tmp + ' ago'
+        return str_tmp 
     elif selectflag == 1:
         return 'Up ' + str_tmp
+    elif selectflag == 2:
+        return str_tmp
+
 
 def ps_image(container) -> str:
     """
@@ -165,6 +170,14 @@ def ps_created(container) -> str:
     """
     return is_CalculateContainerInfo(container,0)
 
+def ps_finishAt(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の STATUS表示のExitedに必要な終了した日時の値を返却する
+    return str_tmp + ' ago'
+
+    """
+    return is_CalculateContainerInfo(container,2)
+
 
 
 def ps_status(container) -> str:
@@ -177,7 +190,7 @@ def ps_status(container) -> str:
     if is_status == 'running':
         is_str_tmp = is_CalculateContainerInfo(container,1)
     elif is_status == 'exited':
-        is_str_tmp = 'Exited (0) ' + ps_created(container)
+        is_str_tmp = 'Exited (0) ' + ps_finishAt(container) + ' ago'
     elif is_status == 'created':
         is_str_tmp = 'Created '
 
@@ -272,7 +285,7 @@ class Docker():
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = ps_image(container)
             tmp['COMMAND'] = ps_cmd(container)
-            tmp['CREATED'] = ps_created(container)
+            tmp['CREATED'] = ps_created(container) + ' ago'
             tmp['STATUS'] = ps_status(container)
             tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
@@ -297,7 +310,7 @@ class Docker():
             tmp['CONTAINER_ID'] = CONTAINER[12:22]
             tmp['IMAGE'] = ps_image(container)
             tmp['COMMAND'] = ps_cmd(container)
-            tmp['CREATED'] = ps_created(container)
+            tmp['CREATED'] = ps_created(container) + ' ago'
             tmp['STATUS'] = ps_status(container)
             tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
