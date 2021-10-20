@@ -99,14 +99,14 @@ def is_CalculateContainerInfo(container,selectflag:int)->str:
             #月表示
             tmp_moth = int(days_tmp / 30)
             str_tmp = str(tmp_moth) + str_m
-        elif days_tmp > 10:
+        elif days_tmp > 13:
             tmp_weeks = int(days_tmp / 7)
             #週間表示
             if tmp_weeks == 1:
                 str_tmp = str(tmp_weeks) + ' week'
             else:
                 str_tmp = str(tmp_weeks) + str_w
-        elif days_tmp > 2:
+        elif days_tmp > 1:
             #日にち表示
             str_tmp = str(days_tmp) + str_d
         else:
