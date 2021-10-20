@@ -160,17 +160,28 @@ def ps_cmd(container) -> str:
 def ps_created(container) -> str:
     """
     引数のコンテナ情報からdocker ps 出力時の CREATEDの値を返却する
+    return str_tmp + ' ago'
 
     """
     return is_CalculateContainerInfo(container,0)
 
 
+
 def ps_status(container) -> str:
     """
     引数のコンテナ情報からdocker ps 出力時の STATUSの値を返却する
+    Args : container
 
     """
-    return is_CalculateContainerInfo(container,1)
+    is_status = container.attrs['State']['Status']
+    if is_status == 'running':
+        is_str_tmp = is_CalculateContainerInfo(container,1)
+    elif is_status == 'exited':
+        is_str_tmp = 'Exited (0) ' + ps_created(container)
+    elif is_status == 'created':
+        is_str_tmp = 'Created '
+
+    return is_str_tmp
 
 
 def ps_port(container) -> str:
@@ -287,7 +298,7 @@ class Docker():
             tmp['IMAGE'] = ps_image(container)
             tmp['COMMAND'] = ps_cmd(container)
             tmp['CREATED'] = ps_created(container)
-            tmp['STATUS'] = 'STATUS'
+            tmp['STATUS'] = ps_status(container)
             tmp['PORT'] = ps_port(container)
             tmp['NAME'] = str(container.name)
             docker_ps.append(tmp)
