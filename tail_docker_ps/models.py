@@ -135,13 +135,24 @@ def ps_image(container) -> str:
 
     return image_tmp
 
+
 def ps_cmd(container) -> str:
+    """
+    引数のコンテナ情報からdocker ps 出力時の cmdの値を返却する
+
+    """
 
     if container.attrs['Config']['Entrypoint'] is None:
-        tmp = ' '.join(container.attrs['Config']['Cmd'])
+        str_tmp = ' '.join(container.attrs['Config']['Cmd'])
     else:
-        tmp = ' '.join(container.attrs['Config']['Entrypoint'])
-        
+        str_tmp = ' '.join(container.attrs['Config']['Entrypoint'])
+
+    # 最大19文字表示のため19文字をスライス
+    if len(str_tmp) > 19:
+            tmp = str_tmp[0:18] + '…'
+    else :
+        tmp = str_tmp
+
     return str(tmp)
     
 
