@@ -45,25 +45,30 @@ def _stream_docker_logs(container):
     # since=datetime.utcfromtimestamp(time.time())
     # since オプションをつけてあげるとlogの出力期間を限定できる
     tmp = bytearray(b'')
-    for line in container.logs(
-            stream=True, tail=250, timestamps=True):
+    try:
+        for line in container.logs(
+                stream=True, tail=250, timestamps=True):
 
-        if line != b'\n':
-            #このブロックは正常な文字列と 単体文字列が混合している
-            
-            if len(line) > 10:
-                #正常な文字列の場合
-                yield 'data: {}\n\n'.format(line.decode("utf-8"))
-                time.sleep(0.001)
-            else:
-                #異常文字列の場合 stack
+            if line != b'\n':
+                #このブロックは正常な文字列と 単体文字列が混合している
+                
+                if len(line) > 10:
+                    #正常な文字列の場合
+                    yield 'data: {}\n\n'.format(line.decode("utf-8"))
+                    time.sleep(0.001)
+                else:
+                    #異常文字列の場合 stack
+                    tmp += bytes(line)
+                
+            elif line == b'\n':
+                #完全な '\n'のみがヒットしたときの処理
                 tmp += bytes(line)
+                #stackしておいた文字列を返却
+                yield 'data: {}\n\n'.format(str(tmp.decode("utf-8")))
+                time.sleep(0.001)
+                #返却後は初期化
+                tmp = bytearray(b'')
+
+    except docker.errors.APIError:
+            yield 'data: このコンテナにはログがありません。\n\n'
             
-        elif line == b'\n':
-            #完全な '\n'のみがヒットしたときの処理
-            tmp += bytes(line)
-            #stackしておいた文字列を返却
-            yield 'data: {}\n\n'.format(str(tmp.decode("utf-8")))
-            time.sleep(0.001)
-            #返却後は初期化
-            tmp = bytearray(b'')
