@@ -10,7 +10,7 @@
 <script>
     $(function() {
       let ES = new EventSource(
-        "{% url 'logs_detail' container_id %}"
+        "{% url 'logs_detail' container_id %}?tail={{ request.GET.tail }}"
       );
       ES.onmessage = function(e) {
         $('#console').append(`${e.data}\n`);
