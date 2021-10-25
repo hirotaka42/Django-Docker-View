@@ -24,8 +24,6 @@ def ps_list(request):
     else:
         docker_ps_list = dockerClass.ps_list()
 
-    
-        
     return render(request, 'tail_docker_ps/ps_list.html', {'docker_ps_list':docker_ps_list})
 
 
@@ -38,12 +36,18 @@ def logs_detail(request,container_id):
     # docker インスタンス(client2)の作成
     client2 = docker.from_env()
     container = client2.containers.get(container_id)
-    return StreamingHttpResponse(
-        _stream_docker_logs(container),
-        content_type='text/event-stream'
-    )
+    if 'tail' in request.GET:
+        return StreamingHttpResponse(
+        _stream_docker_logs(container,is_get_tail=request.GET.get('tail')),
+        content_type='text/event-stream')
+    elif 'tail' not in request.GET:
+        return StreamingHttpResponse(
+        _stream_docker_logs(container,is_get_tail=20),
+        content_type='text/event-stream')
 
-def _stream_docker_logs(container):
+    
+
+def _stream_docker_logs(container, is_get_tail):
     """
     log出力においてイテレータで文字列を返却してくれるが、１文字が返却される場合がある
     原因は不明だが要因として終端文字が'\r\n'や-json.logにおいて
@@ -58,7 +62,7 @@ def _stream_docker_logs(container):
     tmp = bytearray(b'')
     try:
         for line in container.logs(
-                stream=True, tail=250, timestamps=True):
+                stream=True, tail=int(is_get_tail), timestamps=True):
 
             if line != b'\n':
                 #このブロックは正常な文字列と 単体文字列が混合している
