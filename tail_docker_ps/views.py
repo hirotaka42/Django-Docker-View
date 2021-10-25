@@ -10,10 +10,21 @@ from datetime import datetime
 def ps_list(request):
     dockerClass = Docker()
 
+    # 後で消す
+    for key in request.GET.keys():
+        print(key)
+    print(request.GET)
+
     if request.GET.get('a')=='1':
         docker_ps_list = dockerClass.ps_all_list()
+    elif 'id' in request.GET:
+        # 後で消す
+        print('True')
+        return render(request, 'tail_docker_ps/logs_view.html', {'container_id':request.GET.get('id')})
     else:
         docker_ps_list = dockerClass.ps_list()
+
+    
         
     return render(request, 'tail_docker_ps/ps_list.html', {'docker_ps_list':docker_ps_list})
 
