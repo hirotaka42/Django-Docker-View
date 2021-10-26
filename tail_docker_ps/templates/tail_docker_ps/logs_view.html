@@ -2,15 +2,30 @@
 
 {% block content %}
 
-<div class="docker-ps-list">
-    <p>docker logs -f </p>
-</div>
+<table class="layout-table01">
+
+  <tr>
+      <td><p><samp>CONTAINER ID</samp></p></td>
+      <td><p>NAMES</p></td>
+      <td><p>tail</p></td>
+  </tr>
+  <!-- コンテナ詳細を表示する -->
+  
+  <tr>
+      <td>{{ CONTAINER_ID }}</td>
+      <td>{{ NAME }}</td>
+      <td>{{ tail }}</td>
+  </tr>
+  
+
+
+</table>
 <!-- rows="30" cols="100"-->
 <textarea id="console" style="width:100%;height:75%" readonly></textarea>
 <script>
     $(function() {
       let ES = new EventSource(
-        "{% url 'logs_detail' container_id %}?tail={{ request.GET.tail }}"
+        "{% url 'logs_detail' container_id %}?tail={{ tail }}"
       );
       ES.onmessage = function(e) {
         $('#console').append(`${e.data}\n`);

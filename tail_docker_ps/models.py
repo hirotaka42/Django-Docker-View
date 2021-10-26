@@ -268,6 +268,13 @@ class Docker():
         """
         return self.client.containers.list()
 
+    def is_get_name(self,id:str) -> str:
+        """
+        コンテナIDからコンテナ名を取得する
+        """
+        return self.client.containers.get(id).name
+
+
     
     def ps_list(self) -> list:
         """
