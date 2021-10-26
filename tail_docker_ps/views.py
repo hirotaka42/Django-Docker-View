@@ -1,17 +1,29 @@
 from .models import Docker
 from django.shortcuts import render
-import docker
+import docker       # _stream_docker_logs関数で使用
 from django.http import StreamingHttpResponse
 import time
 from datetime import datetime
 from django.views.generic import TemplateView
 
 # Create your views here.
+def is_check_int(args):
+    """
+    文字列が整数かどうかの判定
+    """
+    try:
+        int(args)
+        return True
+    except ValueError:
+        return False
+
 # make Class
 class Index(TemplateView):
 
     #テンプレートファイル連携
     template_name = 'tail_docker_ps/logs_view.html'
+
+    
 
     #変数を渡す
     def get_context_data(self,**kwargs):
@@ -27,7 +39,14 @@ class Index(TemplateView):
     #get処理
     def get(self, request, *args, **kwargs):
         if 'tail' in request.GET:
-            self.kwargs['tail'] = request.GET.get('tail')
+            check_int = is_check_int(request.GET.get('tail'))
+            # 文字列が数以外ならデフォルト値をセット
+            if (check_int):
+                tail = str(request.GET.get('tail'))
+                self.kwargs['tail'] = int(tail.lower())
+            else:
+                # デフォルト値の設定
+                self.kwargs['tail'] = 20
         else :
             # デフォルト値の設定
             self.kwargs['tail'] = 20
