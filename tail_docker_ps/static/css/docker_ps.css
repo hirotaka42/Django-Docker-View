@@ -18,9 +18,11 @@ body {
 /* div.view-ps  起動済みの docker コンテナID と NAME の表示View */
 div.view-Results {
     margin: 20px; /* 絶対的な寸法 要素外側の距離 */
-    margin-bottom: 32px; /* 要素外側の下の距離 をオーバーライド*/
+    margin-bottom: 5px; /* 要素外側の下の距離 をオーバーライド*/
+    margin-top: 5px;    /* 要素外側の上の距離 をオーバーライド*/
     padding: 52px;     /* 要素内側の距離 */
-    padding-top: 46px; /* 要素内側のtopの距離 をオーバーライド*/
+    padding-top: 24px; /* 要素内側のtopの距離 をオーバーライド*/
+    padding-bottom: 32px;
     color: #828282;
     border-radius: 50px;
     background: #EBECF0;
@@ -38,6 +40,7 @@ table.layout-table01 {
     table-layout: auto;
 	width: 100%;
 	text-align: left;           /* textを左揃え*/
+    padding-bottom: 20px;       /* テーブル下のコンソールとの間の距離 */
     border-collapse: separate;  /* 列の横幅を表示*/
     border-spacing: 8px 0px;    /* 列の横幅に対する設定*/
     
