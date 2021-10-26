@@ -4,23 +4,45 @@ import docker
 from django.http import StreamingHttpResponse
 import time
 from datetime import datetime
+from django.views.generic import TemplateView
 
 # Create your views here.
+# make Class
+class Index(TemplateView):
+
+    #テンプレートファイル連携
+    template_name = 'tail_docker_ps/logs_view.html'
+
+    #変数を渡す
+    def get_context_data(self,**kwargs):
+         context = super().get_context_data(**kwargs)
+         context["CONTAINER_ID"] = self.kwargs['container_id']
+         dockerClass = Docker()
+         context["NAME"] = dockerClass.is_get_name(self.kwargs['container_id'])
+         context["tail"] = self.kwargs['tail']
+         return context
+
+    #get処理
+    def get(self, request, *args, **kwargs):
+        if 'tail' in request.GET:
+            self.kwargs['tail'] = request.GET.get('tail')
+        else :
+            # デフォルト値の設定
+            self.kwargs['tail'] = 20
+
+        return super().get(request, *args, **kwargs)
+
+    #post処理
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, context=self.kwargs)
+
+
 # make ps_list View
 def ps_list(request):
     dockerClass = Docker()
 
-    # 後で消す
-    for key in request.GET.keys():
-        print(key)
-    print(request.GET)
-
     if request.GET.get('a')=='1':
         docker_ps_list = dockerClass.ps_all_list()
-    elif 'id' in request.GET:
-        # 後で消す
-        print('True')
-        return render(request, 'tail_docker_ps/logs_view.html', {'container_id':request.GET.get('id')})
     else:
         docker_ps_list = dockerClass.ps_list()
 
@@ -42,7 +64,7 @@ def logs_detail(request,container_id):
         content_type='text/event-stream')
     elif 'tail' not in request.GET:
         return StreamingHttpResponse(
-        _stream_docker_logs(container,is_get_tail=20),
+        _stream_docker_logs(container,is_get_tail=5),
         content_type='text/event-stream')
 
     
@@ -87,3 +109,4 @@ def _stream_docker_logs(container, is_get_tail):
     except docker.errors.APIError:
             yield 'data: このコンテナにはログがありません。\n\n'
             
+

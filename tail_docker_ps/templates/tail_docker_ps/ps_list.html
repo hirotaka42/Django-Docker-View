@@ -18,7 +18,7 @@
     {% for docker_ps in docker_ps_list %} 
         <tr>
             <!-- <samp> を用いることで idの表示を揃えている -->
-            <td><a href="/?id={{ docker_ps.CONTAINER_ID }}&tail=20" rel="noopener noreferrer"><samp>{{ docker_ps.CONTAINER_ID }}</samp></a></td>
+            <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}?tail=20" rel="noopener noreferrer"><samp>{{ docker_ps.CONTAINER_ID }}</samp></a></td>
             <td>{{ docker_ps.IMAGE }}</td>
             <td>"{{ docker_ps.COMMAND }}"</td>
             <td>{{ docker_ps.CREATED }}</td>
@@ -26,7 +26,7 @@
             <td>{{ docker_ps.PORT }}</td>
             <!-- コンテナIDを tail_docker_ps\urls.py の　name='logs_detail' があるURL処理に渡し、  -->
             <!-- 戻り値として docker_logs/<str:container_id>/ を作成し返却する -->
-            <td><a href="/?id={{ docker_ps.CONTAINER_ID }}&tail=20" rel="noopener noreferrer">{{ docker_ps.NAME }}</a></td>
+            <td><a href="{% url 'index' container_id=docker_ps.CONTAINER_ID %}?tail=20" rel="noopener noreferrer">{{ docker_ps.NAME }}</a></td>
         </tr>
     {% endfor %}
     
