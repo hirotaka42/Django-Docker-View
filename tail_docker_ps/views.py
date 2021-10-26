@@ -62,7 +62,7 @@ class Index(TemplateView):
 def ps_list(request):
     dockerClass = Docker()
 
-    if request.GET.get('a')=='1':
+    if request.GET.get('a')=='1' or request.GET.get('a')=='１':
         docker_ps_list = dockerClass.ps_all_list()
     else:
         docker_ps_list = dockerClass.ps_list()
