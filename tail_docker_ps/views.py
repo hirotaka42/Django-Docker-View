@@ -18,7 +18,9 @@ class Index(TemplateView):
          context = super().get_context_data(**kwargs)
          context["CONTAINER_ID"] = self.kwargs['container_id']
          dockerClass = Docker()
-         context["NAME"] = dockerClass.is_get_name(self.kwargs['container_id'])
+         context["IMAGE"] = dockerClass.is_get_image_from_id(self.kwargs['container_id'])
+         context["NAME"] = dockerClass.is_get_name_from_id(self.kwargs['container_id'])
+         context["PORT"] = dockerClass.is_get_port_from_id(self.kwargs['container_id'])
          context["tail"] = self.kwargs['tail']
          return context
 
