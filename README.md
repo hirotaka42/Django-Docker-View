@@ -2,13 +2,14 @@
 
 ## Overview
 Dockerコンテナ情報をWeb経由で確認することが出来ます。
-localhostを超えて公開した場合、誰にでもログ情報が見えてしまうので注意してください。
+localhostを超えて公開した場合、LAN内の誰にでもログ情報が見えてしまうので注意してください。
 
 ***DEMO:***
 
-iPhone(Safari) | Web(Chrome) | Web(Chrome)
-:-------------------------:|:-------------------------:|:-------------------------:
-![RPReplay_Final1638301361](https://user-images.githubusercontent.com/79750434/144117760-240c120b-093c-4b44-94a2-1c513ded6280.gif) | ![Docker-View](https://user-images.githubusercontent.com/79750434/140269687-8dde9527-72e3-4acc-aab4-6e3bcdee82b5.png) | ![Logs_View](https://user-images.githubusercontent.com/79750434/140269733-7ff1a824-eb55-4819-aa5e-e9cf8756727b.png)
+iPhone(Safari) | Web(Chrome)
+:-------------------------:|:-------------------------:
+<img src="https://user-images.githubusercontent.com/79750434/144117760-240c120b-093c-4b44-94a2-1c513ded6280.gif" width="70%"/> |<img src="https://user-images.githubusercontent.com/79750434/144122011-1e1a257b-3387-491e-b88e-311c1911203f.gif" width="1550%"/>
+
 ## Prerequisite
 
 - python >= 3.8
