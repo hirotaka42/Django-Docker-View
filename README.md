@@ -19,18 +19,48 @@ python manage.py runserver localhost:9999
 
 ## Mac
 ```
-# venv を有効化
-python -m venv venv
-. ./venv/bin/activate
-```
+# git clone
+git clone https://github.com/hirotaka42/Django-Docker-View.git
+cd Django-Docker-View
 
-```
+# venv(仮想環境) を作成
+python3 -m venv venv
+
+# venv を有効化
+. ./venv/bin/activate
+# もしくわ
+source ./venv/bin/activate
+
 # venv内の pipをアップグレード
 python3 -m pip install --upgrade pip
 # モジュール の install 
 pip install -r requirements.txt
 
 python3 manage.py migrate
+python3 manage.py runserver localhost:9999
+```
+
+## mac 一括実行(コピペ用)
+```
+# git clone
+git clone https://github.com/hirotaka42/Django-Docker-View.git
+cd Django-Docker-View
+
+# venv(仮想環境) を作成
+python3 -m venv venv && \
+source ./venv/bin/activate && \
+python3 -m pip install --upgrade pip && \
+pip install -r requirements.txt && \
+python3 manage.py migrate
+
+# 実行
+python3 manage.py runserver localhost:9999
+
+# 終了したら仮想環境を終了
+deactivate
+
+# 2回目以降 (venv有効化し、実行)
+source ./venv/bin/activate
 python3 manage.py runserver localhost:9999
 ```
 
