@@ -1,4 +1,10 @@
-# Django-View-Results-of-Docker
+# Django-Docker-View
+
+## Overview
+Dockerコンテナ情報をWeb経由で確認することが出来ます。
+localhostを超えて公開した場合、誰にでもログ情報が見えてしまうので注意してください。
+
+***DEMO:***
 
 iPhone(Safari) | Web(Chrome) | Web(Chrome)
 :-------------------------:|:-------------------------:|:-------------------------:
