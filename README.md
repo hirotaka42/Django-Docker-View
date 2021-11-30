@@ -1,9 +1,13 @@
 # Django-View-Results-of-Docker
-![Docker-View](https://user-images.githubusercontent.com/79750434/140269687-8dde9527-72e3-4acc-aab4-6e3bcdee82b5.png)
-![Logs_View](https://user-images.githubusercontent.com/79750434/140269733-7ff1a824-eb55-4819-aa5e-e9cf8756727b.png)
+
+iPhone(Safari) | Web(Chrome) | Web(Chrome)
+:-------------------------:|:-------------------------:|:-------------------------:
+![RPReplay_Final1638301361](https://user-images.githubusercontent.com/79750434/144117760-240c120b-093c-4b44-94a2-1c513ded6280.gif) | ![Docker-View](https://user-images.githubusercontent.com/79750434/140269687-8dde9527-72e3-4acc-aab4-6e3bcdee82b5.png) | ![Logs_View](https://user-images.githubusercontent.com/79750434/140269733-7ff1a824-eb55-4819-aa5e-e9cf8756727b.png)
 ## Prerequisite
 
-python >= 3.8
+- python >= 3.8
+- Docker already running
+
 
 ## Installation
 
@@ -36,7 +40,13 @@ python3 -m pip install --upgrade pip
 # モジュール の install 
 pip install -r requirements.txt
 
+# 初回起動時のみ マイグレーションが必要
 python3 manage.py migrate
+# 起動
+python3 manage.py runserver localhost:9999
+
+# 2回目以降 (venv有効化し、実行)
+source ./venv/bin/activate
 python3 manage.py runserver localhost:9999
 ```
 
@@ -66,5 +76,19 @@ python3 manage.py runserver localhost:9999
 
 ## How to use
 
-Access `/` to see its docker ps.
+- Access `/` to see its docker ps.    
+[http://localhost:9999/](http://localhost:9999/)
 
+- If you want to allow access from other PCs.
+
+```
+# Edit `Django-Docker-View/tail_docker/settings.py`
+#`ALLOWED_HOSTS = ['My IP Address']`
+
+# Run
+python manage.py runserver [MyIP]:8000
+```
+
+Edit ./tail_docker/settings.py | Run
+:-------------------------:|:-------------------------:
+![vscode](https://user-images.githubusercontent.com/79750434/144116094-c0de7e4f-1fe9-4d38-a446-dbbc427c671d.png) | ![ターミナル](https://user-images.githubusercontent.com/79750434/144116521-960c2176-ace7-4233-96ee-c9643f4d2c11.png)
