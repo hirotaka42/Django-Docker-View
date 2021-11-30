@@ -193,6 +193,8 @@ def ps_status(container) -> str:
         is_str_tmp = 'Exited (0) ' + ps_finishAt(container) + ' ago'
     elif is_status == 'created':
         is_str_tmp = 'Created '
+    elif is_status == 'restarting':
+        is_str_tmp = 'Restarting'
 
     return is_str_tmp
 
